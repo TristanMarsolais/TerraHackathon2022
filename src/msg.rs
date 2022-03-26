@@ -8,9 +8,9 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    CreateAccount {},
-    ModifyAccount {}, 
-    AHStillAlive {}, 
+    CreateAccount {}, // Creating account for account holder
+    ModifyAccount {}, // Making changings on parameters of choice
+    AHStillAlive {}, // Checking account holder is still alive
     
 }
 
