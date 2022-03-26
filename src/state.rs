@@ -4,19 +4,17 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use cosmwasm_std::{Addr, Coin, Order, StdError, StdResult, Storage}; 
-use cw_storage_plus::(Item, Map);
+use cosmwasm_std::{Addr, Coin, Order, StdError, StdResult, Storage};
+use cw_storage_plus::{Item, Map};
 
-use cw_cw20_plus::(Message, Send);
 use cw20::{Balance, Cw20CoinVerified};
 
-// Initiate a basic state 
+// Initiate a basic state
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema)]
 pub struct State {
     pub creator: Addr,
     pub owner: Addr,
 }
-
 
 // Handle send and receive tokens
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug, Default)]
@@ -69,21 +67,24 @@ impl GenericBalance {
     }
 }
 
+// A number of blocks that needs to pass before something is considered expired
+pub type Time = u64;
 
 // an Account object
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Executer {
     pub exeAddr: Addr,
     pub share: i32,
-    pub exeDateOfLost: Date, // block hight
+    pub exeDateOfLost: Time, // block hight
 }
 
-pub struct Data { // Getting account holder data 
-    pub paramAccTimeBeforeLost: Date, // !!! Block height Amount of time before the funds be avaliable for each reset
-    pub accDateOfLost: Date, // !!! Block height The date that which executers(heirs) can access to the funds
+pub struct Data {
+    // Getting account holder data
+    pub paramAccTimeBeforeLost: Time, // !!! Block height Amount of time before the funds be avaliable for each reset
+    pub accDateOfLost: Time, // !!! Block height The date that which executers(heirs) can access to the funds
     pub executer: Executer, // List of heirs that will inherit the account. Array of (Addr, %ofShare, dateOfLost)
-    pub paramExeTimeBeforeLost: Date,  // !!! Block height Amount of time before the avaliable funds for claim for each reset
-    pub vault: GenericBalance, // Holding accounts coins
+    pub paramExeTimeBeforeLost: Time, // !!! Block height Amount of time before the avaliable funds for claim for each reset
+    pub vault: GenericBalance,        // Holding accounts coins
 }
 
-pub const ACCOUNT: Map<Addr, Data]> = Map::new("account"); // Map<Addr, Account>
+pub const ACCOUNT: Map<Addr, Data> = Map::new("account"); // Map<Addr, Account>
