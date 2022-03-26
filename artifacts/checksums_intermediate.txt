@@ -1,0 +1,1 @@
+7bd0e5bed57150463478043c4d9f3f866c07450f335b8b5122050beb598d54d7  ./target/wasm32-unknown-unknown/release/workshop_template.wasm
