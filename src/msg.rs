@@ -8,15 +8,19 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    CreateAccount {},
-    ModifyAccount {}, 
-    AHStillAlive {}, 
-    
+    CreateAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date,  token: Denom, amount: i32 },
+    ModifyAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date }, // implement executers list with 
+    AHStillAlive { accountHolder: Addr }, 
+    AHSendFunds { accountHolder: Addr, token: Denom, amount: i32 }, 
+    AHWithdraw { accountHolder: Addr }, 
+    EXStillAlive { accountHolder: Addr, execAddr: Addr }, 
+    EXWithdraw { accountHolder: Addr, execAddr: Addr, token: Denom, amount: i32 },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
+    GetAccountData{ accountHolder: Addr },
 }
 
 // We define a custom struct for each query response
