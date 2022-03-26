@@ -40,11 +40,9 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         MsgExecute::CreateAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date,  token: Denom, amount: i32 } => try_create_account(deps, info, accountHolder, /*execList,*/ ahDateOfLost, token, amount),
-        MsgExecute::ModifyAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date } => try_modify_account(deps, info, accountHolder, /*execList,*/ ahDateOfLost),
         MsgExecute::AHStillAlive { accountHolder: Addr } => try_ah_still_alive(deps, info, accountHolder), 
         MsgExecute::AHSendFunds { accountHolder: Addr, token: Denom, amount: i32 } => try_ah_send_funds(deps, info, accountHolder, token, amount), 
         MsgExecute::AHWithdraw { accountHolder: Addr } => try_ah_withdraw(deps, info, accountHolder), 
-        MsgExecute::EXStillAlive { accountHolder: Addr, /*execAddr: Addr*/ } => try_exe_still_alive(deps, info, accountHolder, /*execList,*/), 
         MsgExecute::EXWithdraw { accountHolder: Addr, /*execAddr: Addr,*/ token: Denom, amount: i32 } => try_ex_withdraw(deps, info, accountHolder, /*execList,*/),
     }
 }
@@ -62,17 +60,11 @@ pub fn try_create_account() {
     
     */
 }
-pub fn try_modify_account() {
-    // find user 
-    // PEOPLE.load(&store, "john")?;
-
-}
 pub fn try_ah_still_alive() {
     // 
 }
 pub fn try_ah_send_funds() {} 
 pub fn try_ah_withdraw() {}
-pub fn try_exe_still_alive() {}
 pub fn try_ex_withdraw() {}
 
 
