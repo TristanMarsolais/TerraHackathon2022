@@ -1,8 +1,16 @@
+// Code inspiration for handaling send and receive tokens by https://github.com/Duel-Dojo/The-Duel-Dojo
+
+use cw20::Cw20ReceiveMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+use cosmwasm_std::Addr;
+
+use crate::state::GenericBalance;
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
+    pub sender: Addr,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

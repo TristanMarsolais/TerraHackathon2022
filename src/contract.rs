@@ -1,10 +1,15 @@
+// Code inspiration for handaling send and receive tokens by https://github.com/Duel-Dojo/The-Duel-Dojo
+
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+
 use cw2::set_contract_version;
+use cw20::{Balance, Cw20CoinVerified, Cw20ExecuteMsg, Cw20ReceiveMsg};
 
 use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:Dlegacy";
@@ -16,14 +21,14 @@ pub fn instantiate(
     _env: Env,
     info: MessageInfo,
     msg: InstantiateMsg,
-) -> Result<Response, ContractError> {
-    // Instantiate Storage object
-
-    set_contract_version(deps.Storage, CONTRACT_NAME, CONTRACT_VERSION)
-
-    // save storage
-
-    // Ok(Response)
+) -> StdResult<Response> {
+    set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+    let state = State {
+        creator: info.sender.clone(),
+        owner: info.sender,
+    };
+    config(deps.storage).save(&state)?;
+    Ok(Response::default())
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
