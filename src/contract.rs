@@ -45,10 +45,26 @@ pub fn execute(
 }
 
 pub fn try_create_account() {
+    /* 1. Instantiate new ACCOUNT
+
+    fn demo() -> StdResult<()> {
+    let mut store = MockStorage::new();
+    let data = Data {
+        name: "John".to_string(),
+        age: 32,
+    };
     
+    
+    */
 }
-pub fn try_modify_account() {}
-pub fn try_ah_still_alive() {}
+pub fn try_modify_account() {
+    // find user 
+    // PEOPLE.load(&store, "john")?;
+
+}
+pub fn try_ah_still_alive() {
+    // 
+}
 pub fn try_ah_send_funds() {} 
 pub fn try_ah_withdraw() {}
 pub fn try_exe_still_alive() {}
