@@ -2,14 +2,14 @@
 
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
 
 use cw2::set_contract_version;
-use cw20::{Balance, Cw20CoinVerified, Cw20ExecuteMsg, Cw20ReceiveMsg};
+use cw20::{Balance, Cw20CoinVerified, Cw20ExecuteMsg, Cw20ReceiveMsg, Denom};
 
 use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
-
+use crate::state::{State, Time};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:Dlegacy";
@@ -27,7 +27,7 @@ pub fn instantiate(
         creator: info.sender.clone(),
         owner: info.sender,
     };
-    config(deps.storage).save(&state)?;
+    // config(deps.storage).save(&state)?;
     Ok(Response::default())
 }
 
@@ -39,15 +39,53 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        MsgExecute::CreateAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date,  token: Denom, amount: i32 } => try_create_account(deps, info, accountHolder, /*execList,*/ ahDateOfLost, token, amount),
-        MsgExecute::AHStillAlive { accountHolder: Addr } => try_ah_still_alive(deps, info, accountHolder), 
-        MsgExecute::AHSendFunds { accountHolder: Addr, token: Denom, amount: i32 } => try_ah_send_funds(deps, info, accountHolder, token, amount), 
-        MsgExecute::AHWithdraw { accountHolder: Addr } => try_ah_withdraw(deps, info, accountHolder), 
-        MsgExecute::EXWithdraw { accountHolder: Addr, /*execAddr: Addr,*/ token: Denom, amount: i32 } => try_ex_withdraw(deps, info, accountHolder, /*execList,*/),
+        ExecuteMsg::CreateAccount {
+            accountHolder,
+            executers,
+            /*execList,*/ ahDateOfLost,
+            token,
+            amount,
+        } => try_create_account(
+            deps,
+            info,
+            accountHolder,
+            /*execList,*/ ahDateOfLost,
+            token,
+            amount,
+        ),
+        ExecuteMsg::AHStillAlive { accountHolder } => try_ah_still_alive(deps, info, accountHolder),
+        ExecuteMsg::AHSendFunds {
+            accountHolder,
+            token,
+            amount,
+        } => try_ah_send_funds(deps, info, accountHolder, token, amount),
+        ExecuteMsg::AHWithdraw { accountHolder } => try_ah_withdraw(deps, info, accountHolder),
+        ExecuteMsg::EXWithdraw {
+            accountHolder,
+            execAddr,
+            token,
+            amount,
+        } => try_ex_withdraw(deps, info, accountHolder /*execList,*/),
+        ExecuteMsg::ModifyAccount {
+            accountHolder,
+            executers,
+            ahDateOfLost,
+        } => todo!(),
+        ExecuteMsg::EXStillAlive {
+            accountHolder,
+            execAddr,
+        } => todo!(),
     }
 }
 
-pub fn try_create_account() {
+pub fn try_create_account(
+    deps: DepsMut,
+    info: MessageInfo,
+    accountHolder: Addr,
+    /*execList: Executer,*/ ahDateOfLost: Time,
+    token: Denom,
+    amount: i32,
+) -> Result<Response, ContractError> {
     /* 1. Instantiate new ACCOUNT
 
     fn demo() -> StdResult<()> {
@@ -56,17 +94,46 @@ pub fn try_create_account() {
         name: "John".to_string(),
         age: 32,
     };
-    
-    
-    */
-}
-pub fn try_ah_still_alive() {
-    // 
-}
-pub fn try_ah_send_funds() {} 
-pub fn try_ah_withdraw() {}
-pub fn try_ex_withdraw() {}
 
+
+    */
+    Ok(Response::default())
+}
+pub fn try_ah_still_alive(
+    deps: DepsMut,
+    info: MessageInfo,
+    accountHolder: Addr,
+) -> Result<Response, ContractError> {
+    //
+    Ok(Response::default())
+}
+pub fn try_ah_send_funds(
+    deps: DepsMut,
+    info: MessageInfo,
+    accountHolder: Addr,
+    token: Denom,
+    amount: i32,
+) -> Result<Response, ContractError> {
+    //
+    Ok(Response::default())
+}
+pub fn try_ah_withdraw(
+    deps: DepsMut,
+    info: MessageInfo,
+    accountHolder: Addr,
+) -> Result<Response, ContractError> {
+    //
+    Ok(Response::default())
+}
+pub fn try_ex_withdraw(
+    deps: DepsMut,
+    info: MessageInfo,
+    accountHolder: Addr,
+    /*execList: Executer,*/
+) -> Result<Response, ContractError> {
+    //
+    Ok(Response::default())
+}
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
