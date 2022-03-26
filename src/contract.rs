@@ -2,14 +2,17 @@
 
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{
+    to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Storage,
+};
 
+use cosmwasm_storage::{singleton, Singleton};
 use cw2::set_contract_version;
 use cw20::{Balance, Cw20CoinVerified, Cw20ExecuteMsg, Cw20ReceiveMsg, Denom};
 
 use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::state::{State, Time};
+use crate::state::{Executer, GenericBalance, State, Testament, Time, ACCOUNT};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:Dlegacy";
@@ -27,6 +30,7 @@ pub fn instantiate(
         creator: info.sender.clone(),
         owner: info.sender,
     };
+
     // config(deps.storage).save(&state)?;
     Ok(Response::default())
 }
@@ -78,6 +82,12 @@ pub fn execute(
     }
 }
 
+pub static CONFIG_KEY: &[u8] = b"config";
+
+pub fn config(storage: &mut dyn Storage) -> Singleton<State> {
+    singleton(storage, CONFIG_KEY)
+}
+
 pub fn try_create_account(
     deps: DepsMut,
     info: MessageInfo,
@@ -97,8 +107,28 @@ pub fn try_create_account(
 
 
     */
-    Ok(Response::default())
+
+    let state = config(deps.storage).load()?;
+
+    let testament = Testament {
+        countdown_for_execution: 0,
+        executer: Executer {
+            executor_addr: Addr::unchecked("empty"),
+            time_to_collect: 10,
+        },
+        vault: GenericBalance::new(),
+    };
+
+    ACCOUNT.update(deps.storage, info.sender.clone(), |exists| match exists {
+        None => Ok(exists.unwrap()),
+        Some(account) => Err(ContractError::AlreadyInUse {}),
+    })?;
+
+    let res =
+        Response::new().add_attributes(vec![("action", "create"), ("id", info.sender.as_str())]);
+    Ok(res)
 }
+
 pub fn try_ah_still_alive(
     deps: DepsMut,
     info: MessageInfo,
@@ -107,6 +137,7 @@ pub fn try_ah_still_alive(
     //
     Ok(Response::default())
 }
+
 pub fn try_ah_send_funds(
     deps: DepsMut,
     info: MessageInfo,
@@ -117,6 +148,7 @@ pub fn try_ah_send_funds(
     //
     Ok(Response::default())
 }
+
 pub fn try_ah_withdraw(
     deps: DepsMut,
     info: MessageInfo,

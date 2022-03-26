@@ -73,18 +73,18 @@ pub type Time = u64;
 // an Account object
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Executer {
-    pub exeAddr: Addr,
-    pub share: i32,
-    pub exeDateOfLost: Time, // block hight
+    pub executor_addr: Addr,
+    // If there are multiple executers, store the share for each
+    // pub share: i32,
+    pub time_to_collect: Time, // block hight
 }
 
-pub struct Data {
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct Testament {
     // Getting account holder data
-    pub paramAccTimeBeforeLost: Time, // !!! Block height Amount of time before the funds be avaliable for each reset
-    pub accDateOfLost: Time, // !!! Block height The date that which executers(heirs) can access to the funds
+    pub countdown_for_execution: Time, // !!! Block height Amount of time before the funds be avaliable for each reset
     pub executer: Executer, // List of heirs that will inherit the account. Array of (Addr, %ofShare, dateOfLost)
-    pub paramExeTimeBeforeLost: Time, // !!! Block height Amount of time before the avaliable funds for claim for each reset
     pub vault: GenericBalance,        // Holding accounts coins
 }
 
-pub const ACCOUNT: Map<Addr, Data> = Map::new("account"); // Map<Addr, Account>
+pub const ACCOUNT: Map<Addr, Testament> = Map::new("account"); // Map<Addr, Account>
