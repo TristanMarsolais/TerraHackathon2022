@@ -7,7 +7,7 @@ use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 
 // version info for migration info
-const CONTRACT_NAME: &str = "crates.io:workshop-template";
+const CONTRACT_NAME: &str = "crates.io:Dlegacy";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -17,7 +17,13 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    Ok(Response::new())
+    // Instantiate Storage object
+
+    set_contract_version(deps.Storage, CONTRACT_NAME, CONTRACT_VERSION)
+
+    // save storage
+
+    // Ok(Response)
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -27,8 +33,27 @@ pub fn execute(
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
-    Ok(Response::new())
+    match msg {
+        MsgExecute::CreateAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date,  token: Denom, amount: i32 } => try_create_account(deps, info, accountHolder, /*execList,*/ ahDateOfLost, token, amount),
+        MsgExecute::ModifyAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date } => try_modify_account(deps, info, accountHolder, /*execList,*/ ahDateOfLost),
+        MsgExecute::AHStillAlive { accountHolder: Addr } => try_ah_still_alive(deps, info, accountHolder), 
+        MsgExecute::AHSendFunds { accountHolder: Addr, token: Denom, amount: i32 } => try_ah_send_funds(deps, info, accountHolder, token, amount), 
+        MsgExecute::AHWithdraw { accountHolder: Addr } => try_ah_withdraw(deps, info, accountHolder), 
+        MsgExecute::EXStillAlive { accountHolder: Addr, /*execAddr: Addr*/ } => try_exe_still_alive(deps, info, accountHolder, /*execList,*/), 
+        MsgExecute::EXWithdraw { accountHolder: Addr, /*execAddr: Addr,*/ token: Denom, amount: i32 } => try_ex_withdraw(deps, info, accountHolder, /*execList,*/),
+    }
 }
+
+pub fn try_create_account() {
+    
+}
+pub fn try_modify_account() {}
+pub fn try_ah_still_alive() {}
+pub fn try_ah_send_funds() {} 
+pub fn try_ah_withdraw() {}
+pub fn try_exe_still_alive() {}
+pub fn try_ex_withdraw() {}
+
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
