@@ -8,8 +8,8 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    CreateAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date,  token: Denom, amount: i32 },
-    ModifyAccount { accountHolder: Addr, /*execList,*/ ahDateOfLost: Date }, // implement executers list with 
+    CreateAccount { accountHolder: Addr, executers: Executers, ahDateOfLost: Date,  token: Denom, amount: i32 },
+    ModifyAccount { accountHolder: Addr, executers: Executers, ahDateOfLost: Date }, // implement executers list with 
     AHStillAlive { accountHolder: Addr }, 
     AHSendFunds { accountHolder: Addr, token: Denom, amount: i32 }, 
     AHWithdraw { accountHolder: Addr }, 
