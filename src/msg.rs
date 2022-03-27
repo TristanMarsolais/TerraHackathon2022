@@ -1,4 +1,7 @@
 // Code inspiration for handaling send and receive tokens by https://github.com/Duel-Dojo/The-Duel-Dojo
+// Terra Hackathon 2022
+//Emirali Gungor
+// Tristan Marsolais
 
 use cw20::{Cw20ReceiveMsg, Denom};
 use schemars::JsonSchema;
